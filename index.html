@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8">
+	<title>MUX.Dialog Demo</title>
+
+	<script type="text/javascript" src="http://lavmax.github.com/mootools-core.js"></script>
+
+	<script type="text/javascript" src="MUX.Loaders.js"></script>
+	<script type="text/javascript" src="MUX.Dialog.js"></script>
+	<link rel="stylesheet" href="MUX.Dialog.css">
+
+	<link rel="stylesheet" href="main.css">
+    
+	<style type="text/css">
+    	.mux-hidden {
+    		display: none !important;
+    	}
+    	
+    	.loaders-table li {
+    		position: relative;
+    		height: 32px;
+    	}
+
+    	.loaders-table .name {
+    		margin: 2px 0px;
+    		width: 150px;
+    		border: 1px solid transparent;
+    		padding: 4px;
+    		margin-right: 20px;
+    		border-radius: 4px; -webkit-border-radius: 4px; -moz-border-radius: 4px; -o-border-radius: 4px;
+    		cursor: pointer;
+    	}
+    	
+    	.loaders-table .name:hover,
+    	.loaders-table .name.selected {
+    		border: 1px solid #555;
+    	}
+
+    	.loaders-table .loader {
+    		height: 32px;
+    		width: 200px;
+    	}
+
+    	.loaders-table .code {
+    		width: 500px;
+    	}
+
+    	.loaders-table .code code {
+    		color: #666;
+    	}
+	</style>
+
+	<script type="text/javascript">
+		window.addEvent('domready', function()
+		{
+			var options = {
+				modal: true,
+				resizable: true,
+				size: {
+					x: 500,
+					y: 100
+				},
+				title: 'Basic alert dialog',
+				content: new Element('p', {html: 'Some alert message!'}),
+				buttons: [{
+					title: 'Cancel',
+					style: 'link',
+					click: 'close'
+				},{
+					title: 'OK',
+					click: 'submit'
+				}],
+				onOpen: function(event)
+				{
+					if (this.firstOpen)
+					{
+						//this.content.setStyle('background', 'lightblue');
+						this.content.grab(new Element('input[type=checkbox]'));
+						this.content.grab(new Element('input[type=text]'));
+						this.content.grab(new Element('input[type=button]', {value: 'Button'}));
+					}
+				},
+				onSubmit: function()
+				{
+					this.close(2000);
+				}
+			};
+			
+			var dialog = new MUX.Dialog(options);
+
+			new MUX.Button({
+				title: 'Basic alert dialog',
+				style: 'rectangle',
+				click: function(event)
+				{
+					dialog.initialize(options).open();
+				}
+			}).elem.inject($('body'));
+		});
+	</script>
+</head>
+<body>
+	<div id="general-wrapper">
+		<div id="header">
+		</div>
+		<div id="body">
+			<h1>MUX Dialog Demo</h1>
+		</div>
+		<div id="footer">
+			<div id="footer-left-panel">
+				<span class="footer-text">Copyright &copy; 2011 by Max Lavrov (<a href="mailto:lavmax@gmail.com">lavmax@gmail.com</a>)</span>
+			</div>
+	
+			<div id="footer-right-panel">
+		 		<a href="http://en.wikipedia.org/wiki/MIT_License#License_terms" target="_blank" class="footer-text">Licence MIT</a>
+			</div>
+		</div>
+	</div>
+</body>
+</html>
