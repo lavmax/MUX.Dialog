@@ -225,6 +225,12 @@ MUX.Dialog = new Class({
 				onFailure: function(xhr)
 				{
 					self.options.content = new Element('p', {html: 'Error loading content. Try to reopen this dialog.'});
+
+					if (self.openOnContentLoad)
+					{
+						self.open();
+						self.openOnContentLoad = false;
+					}
 				},
 				onSuccess: function(responseTree, responseElements, responseHTML, responseJavaScript)
 				{
@@ -333,6 +339,7 @@ MUX.Dialog = new Class({
 			this.box.getElement('.mux-dialog-resize-icon')
 				.removeClass('mux-hidden')
 				.addEvent('mousedown', function(event){self._resizeStart(event)});
+			this.content.setStyle('overflow', 'auto');
 		}
 		
 		this.firstOpen = true;

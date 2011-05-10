@@ -96,16 +96,47 @@ li {
 }
 
 #header {
+	position: relative;
 	box-sizing: border-box;
 	top: 0px; 
 	height: 80px;
 	border-bottom: 1px solid #999999;
 	border-left: 1px solid #999999;
 	border-right: 1px solid #999999;
-	border-bottom-left-radius: 4px;
-	border-bottom-right-radius: 4px;
-	-moz-border-radius-bottomleft: 4px;
-	-moz-border-radius-bottomright: 4px;
+	border-bottom-left-radius: 4px; -webkit-border-bottom-left-radius: 4px; -moz-border-radius-bottomleft: 4px;
+	border-bottom-right-radius: 4px; -webkit-border-bottom-right-radius: 4px; -moz-border-radius-bottomright: 4px;
+}
+
+.header-font {
+	font-size: 32px;
+	font-weight: bold;
+	color: #555;
+}
+
+.page-title {
+	position: absolute;
+	margin: auto 1em;
+	top: 0px;
+	bottom: 0px;
+	height: 1.2em;
+}
+
+.my-profile-picture {
+	float: right;
+}
+
+.my-profile-picture img {
+	display: block;
+	border-bottom-right-radius: 4px; -webkit-border-bottom-right-radius: 4px; -moz-border-radius-bottomright: 4px;
+}
+
+.my-profile-name {
+	position: absolute;
+	margin: auto 100px;
+	top: 0px;
+	bottom: 0px;
+	right: 0px;
+	height: 1.2em;
 }
 
 #body {
@@ -118,6 +149,9 @@ li {
 
 h1 {
 	margin-bottom: 10px;
+	font-size: 22px;
+	font-weight: bold;
+	color: #555;
 }
 
 .main-list {
