@@ -115,7 +115,7 @@
 				<br/><br/>
 				<script type="text/javascript">
 					new MUX.Button({
-						title: 'Basic non-modal dialogs. Each click opens new dialog.',
+						title: 'Basic non-modal dialogs, each click opens new one',
 						click: function (event)
 						{
 							new MUX.Dialog({
@@ -207,7 +207,7 @@
 				<br/><br/>
 				<script type="text/javascript">
 					new MUX.Button({
-						title: 'Or maybe you prefer different style for moving dialog.',
+						title: 'Or maybe you prefer different style for moving dialog',
 						click: function (event)
 						{
 							new MUX.Dialog({
@@ -265,19 +265,18 @@
 								}
 							});
 						}
-					}).elem.inject($('customize-dialogs'));
+					}).elem.inject($('ajax-dialogs'));
 				</script>
 				<br/><br/>
 				<script type="text/javascript">
 					new MUX.Button({
-						title: 'Or maybe you prefer different style for moving dialog.',
+						title: 'Integrated with MUX.Loaders for nice submit visualization',
 						click: function (event)
 						{
 							new MUX.Dialog({
-								loader: 'none',
-								title: 'Transparent While Moving',
+								title: 'Smooth Closing',
 								content: new Element('div').adopt([
-									new Element('p', {html: 'Try to move this dialog.'})
+									new Element('p', {html: 'Click "Do The Job" button.'})
 								]),
 								buttons: [{
 									title: 'Cancel',
@@ -293,12 +292,11 @@
 								},
 								onSubmit: function()
 								{
-									alert('The Job Is Done!');
-									this.close();
+									this.close(2000);
 								}
 							});
 						}
-					}).elem.inject($('customize-dialogs'));
+					}).elem.inject($('ajax-dialogs'));
 				</script>
 			</div>
 		</div>
