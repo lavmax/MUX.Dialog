@@ -184,7 +184,7 @@ MUX.Dialog = new Class({
 				self.moveToTop();
 			});
 		}
-
+		
 		// Show/hide header
 		if (this.options.showHeader === true)
 			; // Do nothing, header is visible by default.

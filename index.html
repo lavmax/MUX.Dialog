@@ -5,10 +5,14 @@
 	<title>MUX.Dialog Demo</title>
 
 	<script type="text/javascript" src="http://lavmax.github.com/mootools-core.js"></script>
-
+	
+	<script type="text/javascript" src="MUX.Extensions.js"></script>
 	<script type="text/javascript" src="MUX.Loaders.js"></script>
 	<script type="text/javascript" src="MUX.Dialog.js"></script>
 	<link rel="stylesheet" href="MUX.Dialog.css">
+
+	<link href="prettify/prettify.css" type="text/css" rel="stylesheet" />
+	<script src="prettify/prettify.js" type="text/javascript"></script>
 
 	<link rel="stylesheet" href="main.css">
     
@@ -17,38 +21,29 @@
     		display: none !important;
     	}
     	
-    	.loaders-table li {
-    		position: relative;
-    		height: 32px;
-    	}
-
-    	.loaders-table .name {
-    		margin: 2px 0px;
-    		width: 150px;
-    		border: 1px solid transparent;
-    		padding: 4px;
-    		margin-right: 20px;
-    		border-radius: 4px; -webkit-border-radius: 4px; -moz-border-radius: 4px; -o-border-radius: 4px;
-    		cursor: pointer;
+    	body {
+    		overflow-y: scroll;
     	}
     	
-    	.loaders-table .name:hover,
-    	.loaders-table .name.selected {
-    		border: 1px solid #555;
-    	}
-
-    	.loaders-table .loader {
-    		height: 32px;
-    		width: 200px;
-    	}
-
-    	.loaders-table .code {
-    		width: 500px;
-    	}
-
-    	.loaders-table .code code {
-    		color: #666;
-    	}
+		.dialog-demo-block {
+			margin-left: 1em;
+			margin-bottom: 0.5em;
+		}
+		
+		.show-dialog,
+		.view-source {
+			font-size: 90%;
+			color: #777;
+		}
+		
+		pre.source-code {
+			font-size: 90%;
+			font-family: 'Bitstream Vera Sans Mono', 'Courier', smonospace;
+			padding: 1em;
+			margin-top: 0.5em;
+			background-color: #eee;
+			border: 1px dashed #888;
+		}
 
 		.mux-dialog-box.opacity-moving.mux-dialog-moving {
 			opacity: 0.6;
@@ -68,6 +63,190 @@
 				return this.replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/\n|\r/g, '<br>');
 			}
 		});
+		
+		window.addEvent('domready', function()
+		{
+			$$('.view-source').addEvent('click', function(event)
+			{
+				this.getParent().getNext().getElement('.source-code').muxSlide('toggle');
+			});
+			
+			prettyPrint();
+			
+			$('basic-dialog-modal').addEvent('click', function(event)
+			{
+				new MUX.Dialog({
+					loader: 'none',
+					title: 'Basic Modal Dialog',
+					content: new Element('div', {styles: {maxWidth: 400}}).adopt([
+						new Element('p', {html: 'This is simple, non-resizable dialog. In most cases you don\'t need a dialog to be resized by user. Better practice is to make it suit to your content.'}),
+						new Element('br'),
+						new Element('p', {html: 'Try to drag and move the dialog.'}),
+						new Element('br'),
+						new Element('p', {html: 'You can also close it by pressing Esc.'})
+					]),
+					buttons: [{
+						title: 'Cancel',
+						style: 'link',
+						click: 'close'
+					},{
+						title: 'Do The Job',
+						click: 'submit'
+					}],
+					onSubmit: function()
+					{
+						alert('The Job Is Done!');
+						this.close();
+					}
+				});
+			});
+
+			$('basic-dialogs-non-modal').addEvent('click', function(event)
+			{
+				new MUX.Dialog({
+					modal: false,
+					resizable: true,
+					size: {x: 400},
+					loader: 'none',
+					title: 'Basic Non-modal Resizable Dialog',
+					content: new Element('div').adopt([
+						new Element('p', {html: 'This is simple, non-modal dialog. Try to open few dialogs and click between them.'}),
+						new Element('br'),
+						new Element('p', {html: 'You can also resize this dialog.'})
+					]),
+					buttons: [{
+						title: 'Cancel',
+						style: 'link',
+						click: 'close'
+					},{
+						title: 'Do The Job',
+						click: 'submit'
+					}],
+					onSubmit: function()
+					{
+						alert('The Job Is Done!');
+						this.close();
+					}
+				})
+			});
+
+			$('basic-dialog-lightweight').addEvent('click', function(event)
+			{
+				new MUX.Dialog({
+					loader: 'none',
+					showHeader: 'invisible',
+					content: new Element('div', {styles: {maxWidth: 400}}).adopt([
+						new Element('p', {html: 'This is simple, non-resizable dialog. In most cases you don\'t need a dialog to be resized by user. Better practice is to make it suit to your content.'}),
+						new Element('br'),
+						new Element('p', {html: 'You still can drag and move the dialog.'}),
+						new Element('br'),
+						new Element('p', {html: 'And of course you can close it by pressing Esc.'})
+					])
+				});
+			});
+
+			$('basic-dialog-styled-cursor').addEvent('click', function(event)
+			{
+				new MUX.Dialog({
+					loader: 'none',
+					resizable: true,
+					title: 'Styled Cursors',
+					content: new Element('div').adopt([
+						new Element('p', {html: 'Try to move mouse over the header and the resize icon.'})
+					]),
+					buttons: [{
+						title: 'Cancel',
+						style: 'link',
+						click: 'close'
+					},{
+						title: 'Do The Job',
+						click: 'submit'
+					}],
+					onOpen: function(event)
+					{
+						this.box.getElement('.mux-dialog-header').setStyle('cursor', 'move');
+						this.box.getElement('.mux-dialog-resize-icon').setStyle('cursor', 'se-resize');
+					},
+					onSubmit: function()
+					{
+						alert('The Job Is Done!');
+						this.close();
+					}
+				});
+			});
+
+			$('basic-dialog-styled-move').addEvent('click', function(event)
+			{
+				new MUX.Dialog({
+					loader: 'none',
+					title: 'Transparent While Moving',
+					content: new Element('div').adopt([
+						new Element('p', {html: 'Try to move this dialog.'})
+					]),
+					buttons: [{
+						title: 'Cancel',
+						style: 'link',
+						click: 'close'
+					},{
+						title: 'Do The Job',
+						click: 'submit'
+					}],
+					onOpen: function(event)
+					{
+						this.box.addClass('opacity-moving');
+					},
+					onSubmit: function()
+					{
+						alert('The Job Is Done!');
+						this.close();
+					}
+				});
+			});
+
+			$('basic-dialog-load-from-server').addEvent('click', function(event)
+			{
+				new MUX.Dialog({
+					loader: 'none',
+					title: 'Load Content With AJAX',
+					content: 'external-content.html',
+					buttons: [{
+						title: 'Cancel',
+						style: 'link',
+						click: 'close'
+					},{
+						title: 'Do The Job',
+						click: 'submit'
+					}],
+					onSubmit: function()
+					{
+						alert('The Job Is Done!');
+						this.close();
+					}
+				});
+			});
+
+			$('basic-dialog-loaders').addEvent('click', function(event)
+			{
+				new MUX.Dialog({
+					title: 'Smooth Closing',
+					content: new Element('div').adopt([
+						new Element('p', {html: 'Click "Do The Job" button.'})
+					]),
+					buttons: [{
+						title: 'Cancel',
+						style: 'link',
+						click: 'close'
+					},{
+						title: 'Do The Job',
+						click: 'submit'
+					}],
+					onSubmit: function()
+					{
+						this.close(2000);
+					}
+				});
+			});
+		})
 	</script>
 </head>
 <body>
@@ -80,224 +259,212 @@
 		<div id="body">
 			<div id="easy-dialogs">
 				<h1>Easy To Create</h1>
-				<script type="text/javascript">
-					new MUX.Button({
-						title: 'Basic modal dialog',
-						click: function (event)
-						{
-							new MUX.Dialog({
-								loader: 'none',
-								title: 'Basic Modal Dialog',
-								content: new Element('div', {styles: {maxWidth: 400}}).adopt([
-									new Element('p', {html: 'This is simple, non-resizable dialog. In most cases you don\'t need a dialog to be resized by user. Better practice is to make it suit to your content.'}),
-									new Element('br'),
-									new Element('p', {html: 'Try to drag and move the dialog.'}),
-									new Element('br'),
-									new Element('p', {html: 'You can also close it by pressing Esc.'})
-								]),
-								buttons: [{
-									title: 'Cancel',
-									style: 'link',
-									click: 'close'
-								},{
-									title: 'Do The Job',
-									click: 'submit'
-								}],
-								onSubmit: function()
-								{
-									alert('The Job Is Done!');
-									this.close();
-								}
-							});
-						}
-					}).elem.inject($('easy-dialogs'));
-				</script>
-				<br/><br/>
-				<script type="text/javascript">
-					new MUX.Button({
-						title: 'Basic non-modal dialogs, each click opens new one',
-						click: function (event)
-						{
-							new MUX.Dialog({
-								modal: false,
-								resizable: true,
-								size: {x: 400},
-								loader: 'none',
-								title: 'Basic Non-modal Resizable Dialog',
-								content: new Element('div').adopt([
-									new Element('p', {html: 'This is simple, non-modal dialog. Try to open few dialogs and click between them.'}),
-									new Element('br'),
-									new Element('p', {html: 'You can also resize this dialog.'})
-								]),
-								buttons: [{
-									title: 'Cancel',
-									style: 'link',
-									click: 'close'
-								},{
-									title: 'Do The Job',
-									click: 'submit'
-								}],
-								onSubmit: function()
-								{
-									alert('The Job Is Done!');
-									this.close();
-								}
-							});
-						}
-					}).elem.inject($('easy-dialogs'));
-				</script>
-				<br/><br/>
-				<script type="text/javascript">
-					new MUX.Button({
-						title: 'Lightweight informational dialog',
-						click: function (event)
-						{
-							new MUX.Dialog({
-								loader: 'none',
-								showHeader: 'invisible',
-								content: new Element('div', {styles: {maxWidth: 400}}).adopt([
-									new Element('p', {html: 'This is simple, non-resizable dialog. In most cases you don\'t need a dialog to be resized by user. Better practice is to make it suit to your content.'}),
-									new Element('br'),
-									new Element('p', {html: 'You still can drag and move the dialog.'}),
-									new Element('br'),
-									new Element('p', {html: 'And of course you can close it by pressing Esc.'})
-								])
-							});
-						}
-					}).elem.inject($('easy-dialogs'));
-				</script>
-				<br/><br/>
+				<div class="dialog-demo-block">
+					<p><span>Basic modal dialog</span>&nbsp;&nbsp;&nbsp;<span id="basic-dialog-modal" class="show-dialog link">Open Dialog</span>&nbsp;&nbsp;&nbsp;<span class="view-source link">View Code</span></p>
+					<div class="mux-slider-wrapper" style="overflow: hidden; height: 0px;">
+<pre class="prettyprint lang-js source-code">
+new MUX.Dialog({
+	loader: 'none',
+	title: 'Basic Modal Dialog',
+	content: new Element('p', {html: 'Some text.'}),
+	buttons: [{
+		title: 'Cancel',
+		style: 'link',
+		click: 'close'
+	},{
+		title: 'Do The Job',
+		click: 'submit'
+	}],
+	onSubmit: function()
+	{
+		alert('The Job Is Done!');
+		this.close();
+	}
+});
+</pre>
+					</div>
+				</div>
+				<div class="dialog-demo-block">
+					<p><span>Basic non-modal dialogs, each click opens new one</span>&nbsp;&nbsp;&nbsp;<span id="basic-dialogs-non-modal" class="show-dialog link">Open Dialog</span>&nbsp;&nbsp;&nbsp;<span class="view-source link">View Code</span></p>
+					<div class="mux-slider-wrapper" style="overflow: hidden; height: 0px;">
+<pre class="prettyprint lang-js source-code">
+new MUX.Dialog({
+	modal: false,
+	resizable: true,
+	size: {x: 400},
+	loader: 'none',
+	title: 'Basic Non-modal Resizable Dialog',
+	content: new Element('p', {html: 'Some text.'}),
+	buttons: [{
+		title: 'Cancel',
+		style: 'link',
+		click: 'close'
+	},{
+		title: 'Do The Job',
+		click: 'submit'
+	}],
+	onSubmit: function()
+	{
+		alert('The Job Is Done!');
+		this.close();
+	}
+});
+</pre>
+					</div>
+				</div>
+				<div class="dialog-demo-block">
+					<p><span>Lightweight informational dialog</span>&nbsp;&nbsp;&nbsp;<span id="basic-dialog-lightweight" class="show-dialog link">Open Dialog</span>&nbsp;&nbsp;&nbsp;<span class="view-source link">View Code</span></p>
+					<div class="mux-slider-wrapper" style="overflow: hidden; height: 0px;">
+<pre class="prettyprint lang-js source-code">
+new MUX.Dialog({
+	loader: 'none',
+	showHeader: 'invisible',
+	content: new Element('p', {html: 'Some text.'})
+});
+</pre>
+					</div>
+				</div>
 			</div>
 			<div id="customize-dialogs">
 				<h1>Easy To Customize</h1>
-				<script type="text/javascript">
-					new MUX.Button({
-						title: 'If you love complicated cursors',
-						click: function (event)
-						{
-							new MUX.Dialog({
-								loader: 'none',
-								resizable: true,
-								title: 'Styled Cursors',
-								content: new Element('div').adopt([
-									new Element('p', {html: 'Try to move mouse over the header and the resize icon.'})
-								]),
-								buttons: [{
-									title: 'Cancel',
-									style: 'link',
-									click: 'close'
-								},{
-									title: 'Do The Job',
-									click: 'submit'
-								}],
-								onOpen: function(event)
-								{
-									this.box.getElement('.mux-dialog-header').setStyle('cursor', 'move');
-									this.box.getElement('.mux-dialog-resize-icon').setStyle('cursor', 'se-resize');
-								},
-								onSubmit: function()
-								{
-									alert('The Job Is Done!');
-									this.close();
-								}
-							});
-						}
-					}).elem.inject($('customize-dialogs'));
-				</script>
-				<br/><br/>
-				<script type="text/javascript">
-					new MUX.Button({
-						title: 'Or maybe you prefer different style for moving dialog',
-						click: function (event)
-						{
-							new MUX.Dialog({
-								loader: 'none',
-								title: 'Transparent While Moving',
-								content: new Element('div').adopt([
-									new Element('p', {html: 'Try to move this dialog.'})
-								]),
-								buttons: [{
-									title: 'Cancel',
-									style: 'link',
-									click: 'close'
-								},{
-									title: 'Do The Job',
-									click: 'submit'
-								}],
-								onOpen: function(event)
-								{
-									this.box.addClass('opacity-moving');
-								},
-								onSubmit: function()
-								{
-									alert('The Job Is Done!');
-									this.close();
-								}
-							});
-						}
-					}).elem.inject($('customize-dialogs'));
-				</script>
-				<br/><br/>
+				<div class="dialog-demo-block">
+					<p><span>If you love complicated cursors</span>&nbsp;&nbsp;&nbsp;<span id="basic-dialog-styled-cursor" class="show-dialog link">Open Dialog</span>&nbsp;&nbsp;&nbsp;<span class="view-source link">View CSS And Code</span></p>
+					<div class="mux-slider-wrapper" style="overflow: hidden; height: 0px;">
+						<div class="source-code">
+<pre class="prettyprint lang-css source-code">
+/* Add these styles to your css file to overwrite original styles for all dialogs */
+.mux-dialog-header {
+	cursor: move;
+}
+
+.mux-dialog-resize-icon {
+	cursor: se-resize;
+}
+</pre>
+<pre class="prettyprint lang-js source-code">
+new MUX.Dialog({
+	loader: 'none',
+	resizable: true,
+	title: 'Styled Cursors',
+	content: new Element('p', {html: 'Some text.'}),
+	buttons: [{
+		title: 'Cancel',
+		style: 'link',
+		click: 'close'
+	},{
+		title: 'Do The Job',
+		click: 'submit'
+	}],
+	onOpen: function(event)
+	{
+		// You can also set styles for a single dialog on open.
+		if (this.firstOpen)
+		{
+			this.box.getElement('.mux-dialog-header').setStyle('cursor', 'move');
+			this.box.getElement('.mux-dialog-resize-icon').setStyle('cursor', 'se-resize');
+		}
+	},
+	onSubmit: function()
+	{
+		alert('The Job Is Done!');
+		this.close();
+	}
+});
+</pre>
+						</div>
+					</div>
+				</div>
+				<div class="dialog-demo-block">
+					<p><span>Or maybe you prefer different style for moving dialog</span>&nbsp;&nbsp;&nbsp;<span id="basic-dialog-styled-move" class="show-dialog link">Open Dialog</span>&nbsp;&nbsp;&nbsp;<span class="view-source link">View CSS And Code</span></p>
+					<div class="mux-slider-wrapper" style="overflow: hidden; height: 0px;">
+						<div class="source-code">
+<pre class="prettyprint lang-css source-code">
+/* Add these styles to your css file to overwrite original styles for all dialogs */
+.mux-dialog-box.mux-dialog-moving {
+	opacity: 0.6;
+	filter: alpha(opacity = 60);
+}
+
+.mux-dialog-box.mux-dialog-moving .mux-dialog-content,
+.mux-dialog-box.mux-dialog-moving .mux-dialog-footer {
+	visibility: hidden;
+}
+</pre>
+<pre class="prettyprint lang-js source-code">
+new MUX.Dialog({
+	loader: 'none',
+	title: 'Transparent While Moving',
+	content: new Element('p', {html: 'Some text.'}),
+	buttons: [{
+		title: 'Cancel',
+		style: 'link',
+		click: 'close'
+	},{
+		title: 'Do The Job',
+		click: 'submit'
+	}],
+	onSubmit: function()
+	{
+		alert('The Job Is Done!');
+		this.close();
+	}
+});
+</pre>
+						</div>
+					</div>
+				</div>
 			</div>
 			<div id="ajax-dialogs">
 				<h1>AJAX Friendly</h1>
-				<script type="text/javascript">
-					new MUX.Button({
-						title: 'Load some content from server',
-						click: function (event)
-						{
-							new MUX.Dialog({
-								loader: 'none',
-								title: 'Load Content With AJAX',
-								content: 'external-content.html',
-								buttons: [{
-									title: 'Cancel',
-									style: 'link',
-									click: 'close'
-								},{
-									title: 'Do The Job',
-									click: 'submit'
-								}],
-								onSubmit: function()
-								{
-									alert('The Job Is Done!');
-									this.close();
-								}
-							});
-						}
-					}).elem.inject($('ajax-dialogs'));
-				</script>
-				<br/><br/>
-				<script type="text/javascript">
-					new MUX.Button({
-						title: 'Integrated with MUX.Loaders for nice submit visualization',
-						click: function (event)
-						{
-							new MUX.Dialog({
-								title: 'Smooth Closing',
-								content: new Element('div').adopt([
-									new Element('p', {html: 'Click "Do The Job" button.'})
-								]),
-								buttons: [{
-									title: 'Cancel',
-									style: 'link',
-									click: 'close'
-								},{
-									title: 'Do The Job',
-									click: 'submit'
-								}],
-								onOpen: function(event)
-								{
-									this.box.addClass('opacity-moving');
-								},
-								onSubmit: function()
-								{
-									this.close(2000);
-								}
-							});
-						}
-					}).elem.inject($('ajax-dialogs'));
-				</script>
+				<div class="dialog-demo-block">
+					<p><span>Load some content from a server</span>&nbsp;&nbsp;&nbsp;<span id="basic-dialog-load-from-server" class="show-dialog link">Open Dialog</span>&nbsp;&nbsp;&nbsp;<span class="view-source link">View Code</span></p>
+					<div class="mux-slider-wrapper" style="overflow: hidden; height: 0px;">
+<pre class="prettyprint lang-js source-code">
+new MUX.Dialog({
+	loader: 'none',
+	title: 'Load Content With AJAX',
+	content: 'external-content.html',
+	buttons: [{
+		title: 'Cancel',
+		style: 'link',
+		click: 'close'
+	},{
+		title: 'Do The Job',
+		click: 'submit'
+	}],
+	onSubmit: function()
+	{
+		alert('The Job Is Done!');
+		this.close();
+	}
+});
+</pre>
+					</div>
+				</div>
+				<div class="dialog-demo-block">
+					<p><span>Integrated with MUX.Loaders for nice submit visualization</span>&nbsp;&nbsp;&nbsp;<span id="basic-dialog-loaders" class="show-dialog link">Open Dialog</span>&nbsp;&nbsp;&nbsp;<span class="view-source link">View Code</span></p>
+					<div class="mux-slider-wrapper" style="overflow: hidden; height: 0px;">
+<pre class="prettyprint lang-js source-code">
+new MUX.Dialog({
+	loader: 'auto',
+	title: 'Smooth Closing',
+	content: new Element('p', {html: 'Some text.'}),
+	buttons: [{
+		title: 'Cancel',
+		style: 'link',
+		click: 'close'
+	},{
+		title: 'Do The Job',
+		click: 'submit'
+	}],
+	onSubmit: function()
+	{
+		this.close(2000);
+	}
+});
+</pre>
+					</div>
+				</div>
 			</div>
 		</div>
 		<div id="footer">
