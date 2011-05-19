@@ -591,7 +591,7 @@ MUX.Dialog.moving = function (event)
 		maxY: cm.browserSize.y - coord.height
 	}
 	
-	// Eliminates moving out abobe browser's window
+	// Eliminates moving out of the top of main window
 	if (newPosition.y < boundaryCoord.minY)
 	{
 		newMouse.y -= newPosition.y - boundaryCoord.minY;
@@ -674,7 +674,7 @@ MUX.Button = new Class({
 				this.elem.addClass('mux-button-ellipse');
 			else if (!Browser.ie || Browser.version > 8)
 				this.elem.addClass('mux-button-rectangle');
-		// Otherwise 'native' browser's button
+		// Otherwise native browser's button
 		
 		if (this.options.click)
 		{
