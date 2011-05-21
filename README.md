@@ -2,8 +2,10 @@ MUX.Dialog
 ==========
 
 Lightweight, beautiful and clean Mootools plugin to show dialogs on your sites and web-apps.
+
 - Rich functionality, which means that it supports keyboard events, dragging, sizing, elastic and fixed size etc.
 - Clean and simple API to customize your dialogs.
+
 3. Styleable with CSS, so you can overwrite almost all styles in your CSS file (see example).
 4. Full documentation below.
 
