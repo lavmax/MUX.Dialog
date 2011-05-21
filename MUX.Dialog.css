@@ -6,8 +6,8 @@
 	left: 0px;
 	top: 0px;
 	position: fixed;
-	width: 100%;
-	height: 100%;
+	width: 10000px; /* mobile safari hack */
+	height: 10000px; /* mobile safari hack */
 	z-index: 10000;
 }
 
