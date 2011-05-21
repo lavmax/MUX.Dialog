@@ -1,3 +1,43 @@
+MUX.Dialog
+==========
+
+Lightweight, beautiful and clean Mootools plugin to show dialogs on your sites and web-apps.
+- Rich functionality, which means that it supports keyboard events, dragging, sizing, elastic and fixed size etc.
+- Clean and simple API to customize your dialogs.
+3. Styleable with CSS, so you can overwrite almost all styles in your CSS file (see example).
+4. Full documentation below.
+
+Demo is here <a href="http://lavmax.github.com/MUX.Dialog">http://lavmax.github.com/MUX.Dialog</a>
+
+![Screenshot](http://lavmax.github.com/MUX.Dialog/dialog.png)
+
+
+How to Use
+----------
+
+The best description is an example.
+
+	// Creating a simplest loader
+	var loader = new MUX.Loader.Bar();
+	loader.start(); // Starts and shows the loader
+	loader.stop(); // Stops and hides the loader
+	
+	// You can also use start() and stop() for html element
+	$('my-loaders-id').start();
+	$('my-loaders-id').stop();
+	
+	// You can get loader's element using $
+	$(loader).inject(document.body);
+	// is the same as
+	loader.elem.inject(document.body);
+	
+
+Documentation
+-------------
+
+For full documentation see [Docs/MUX.Loaders.md](https://github.com/lavmax/MUX.Loaders/blob/master/Docs/MUX.Loaders.md).
+
+
 /* 
  * MUX.Window
  * version: 0.1
@@ -9,6 +49,7 @@
 4. Lightweight. You don't need to attach heavy library or framework just to show nice message or form.
 5. Transparent and compact API.
 6. Stylable with CSS. There are almost no element styles in the code, you can change the view modifying/overriding CSS file.
+*/
 
 Inspired by Mootools and MochaUI.
 

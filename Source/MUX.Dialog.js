@@ -121,8 +121,8 @@ MUX.Dialog = new Class({
 		// Add header events to handle window drag and to prevent selecting text in header
 		// This need for drag to avoid cursor changing and to for nice behavior.
 		this.header.addEvents({
-			mousedown: MUX.Dialog.moveStart,
-			selectstart: function (event) {event.preventDefault();}
+			mousedown: this._dragStart.bind(this),
+			selectstart: function (event) {event.preventDefault()}
 		});
 		
 		// Set title
@@ -196,7 +196,7 @@ MUX.Dialog = new Class({
 			for (var i = 0; i < this.options.buttons.length; i++)
 			{
 				if (this.options.buttons[i].click === 'close')
-					var buttonClick = function(event) {self.close()};
+					var buttonClick = this.close.bind(this, 0);
 				else if (this.options.buttons[i].click === 'submit')
 					var buttonClick = function(event)
 					{
@@ -468,6 +468,26 @@ MUX.Dialog = new Class({
 			mousemove: MUX.Dialog._resizing,
 			mouseup: MUX.Dialog._resizeEnd
 		});
+	},
+	
+	_dragStart: function (event)
+	{
+		if (event.rightClick) return;
+		
+		MUX.Dialog.currentDialogParams = {
+			box: this.box,
+			mouse: {
+				x: event.client.x,
+				y: event.client.y
+			},
+			browser: $(window).getSize()
+		}
+	
+		$(document).addEvents({
+			mousemove: MUX.Dialog._dragMoving,
+			mouseup: MUX.Dialog._dragEnd
+		});
+		
 	}
 });
 	
@@ -531,7 +551,7 @@ MUX.Dialog._resizing = function(event)
 	
 MUX.Dialog._resizeEnd = function(event)
 {
-	//MUX.Dialog.currentDialogParams = {};
+	MUX.Dialog.currentDialogParams = {};
 	
 	$(document).removeEvents({
 		mousemove: MUX.Dialog._resizing,
@@ -539,47 +559,23 @@ MUX.Dialog._resizeEnd = function(event)
 	});	
 }
 
-// Window static methods
-MUX.Dialog.moveStart = function (event)
+MUX.Dialog._dragMoving = function (event)
 {
-	if (event.rightClick) return;
-	
-	var cm = {};
-	cm.elem = event.target.getParent('.mux-dialog-box');
-	cm.mouseX = event.client.x;
-	cm.mouseY = event.client.y;
-	
-	// Remember browser window size
-	cm.browserSize = $(window).getSize();
+	event.preventDefault();
 
-	$(document).addEvents({
-		mousemove: MUX.Dialog.moving,
-		mouseup: MUX.Dialog.moveEnd
-	});
-	
-	MUX.Dialog.currentMove = cm;
-}
+	var params = MUX.Dialog.currentDialogParams;
 
-MUX.Dialog.moving = function (event)
-{
-	var cm = MUX.Dialog.currentMove;
-
-	// Set window opacity to a little bit transparent.
-	cm.elem.addClass('mux-dialog-moving');
+	params.box.addClass('mux-dialog-moving');
 	
-	var coord = cm.elem.getCoordinates();
+	var coord = params.box.getCoordinates();
 	
-	var offset = {
-		x: event.client.x - cm.mouseX,
-		y: event.client.y - cm.mouseY
+	// Calculate new box's position
+	var newBoxPosition = {
+		x: coord.left + event.client.x - params.mouse.x,
+		y: coord.top + event.client.y - params.mouse.y
 	}
 	
-	var newPosition = {
-		x: coord.left + offset.x,
-		y: coord.top + offset.y
-	}
-	
-	var newMouse = {
+	params.mouse = {
 		x: event.client.x,
 		y: event.client.y
 	}
@@ -587,41 +583,39 @@ MUX.Dialog.moving = function (event)
 	var boundaryCoord = {
 		minX: 0,
 		minY: 0,
-		maxX: cm.browserSize.x - coord.width,
-		maxY: cm.browserSize.y - coord.height
+		maxX: params.browser.x - coord.width,
+		maxY: params.browser.y - coord.height
 	}
 	
-	// Eliminates moving out of the top of main window
-	if (newPosition.y < boundaryCoord.minY)
+	// Eliminate moving out of the top window's boundary
+	if (newBoxPosition.y < boundaryCoord.minY)
 	{
-		newMouse.y -= newPosition.y - boundaryCoord.minY;
-		newPosition.y = boundaryCoord.minY;
+		params.mouse.y -= newBoxPosition.y - boundaryCoord.minY;
+		newBoxPosition.y = boundaryCoord.minY;
 	}
 	
-	cm.elem.setStyles({
-			left: newPosition.x,
-			top: newPosition.y
-		});
-
-	cm.mouseX = newMouse.x;
-	cm.mouseY = newMouse.y;
+	// Eliminate moving out of the right window's boundary
+	if (newBoxPosition.x > boundaryCoord.maxX)
+	{
+		params.mouse.x -= newBoxPosition.x - boundaryCoord.maxX;
+		newBoxPosition.x = boundaryCoord.maxX;
+	}
 	
-	MUX.Dialog.currentMove = cm;
-	
-	event.preventDefault();
+	params.box.setStyles({
+		left: newBoxPosition.x,
+		top: newBoxPosition.y
+	});
 }
 
-MUX.Dialog.moveEnd = function (event)
+MUX.Dialog._dragEnd = function (event)
 {
-	// Restore opacity to initial value
-	MUX.Dialog.currentMove.elem.removeClass('mux-dialog-moving');
-	
-	MUX.Dialog.currentMove = {};
+	MUX.Dialog.currentDialogParams.box.removeClass('mux-dialog-moving');
+	MUX.Dialog.currentDialogParams = {};
 
 	$(document).removeEvents({
-			mousemove: MUX.Dialog.moving,
-			mouseup: MUX.Dialog.moveEnd
-		});	
+		mousemove: MUX.Dialog._dragMoving,
+		mouseup: MUX.Dialog._dragEnd
+	});	
 }
 
 // In this function we create a new scope for button handler function
@@ -674,7 +668,7 @@ MUX.Button = new Class({
 				this.elem.addClass('mux-button-ellipse');
 			else if (!Browser.ie || Browser.version > 8)
 				this.elem.addClass('mux-button-rectangle');
-		// Otherwise native browser's button
+		// Otherwise 'native' browser's button
 		
 		if (this.options.click)
 		{
