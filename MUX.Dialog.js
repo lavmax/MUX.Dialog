@@ -9,7 +9,6 @@ MUX.Dialog = new Class({
 		modal: true,
 		resizable: false,
 		closable: true,
-		defaultButton: null,
 		autoOpen: true,
 		showHeader: true,
 		showFooter: 'auto',
@@ -20,8 +19,7 @@ MUX.Dialog = new Class({
 		},
 		loader: 'auto',
 		buttons: [],
-		defaultButton: null
-		
+		defaultButton: undefined
 	},
 	
 	zIndex: 10001,
@@ -126,8 +124,7 @@ MUX.Dialog = new Class({
 		});
 		
 		// Set title
-		if (this.options.title)
-			this.box.getElement('.mux-dialog-header-title').appendText(this.options.title);
+		this.header.getElement('.mux-dialog-header-title').set('text', this.options.title);
 		
 		// Set content size for resizable window
 		if (this.options.resizable)
@@ -179,14 +176,12 @@ MUX.Dialog = new Class({
 		}
 		
 		// Show/hide footer
-		if (this.options.showFooter === true)
-			; // Do nothing, footer is visible by default.
-		else if (this.options.showFooter === 'auto')
+		if (this.options.showFooter === 'auto')
 		{
-			if (!this.options.buttons.length && !this.loader)
+			if (!this.options.buttons.length)
 				this.footer.addClass('mux-hidden');
 		}
-		else // False or not defined.
+		else if (this.options.showFooter !== true)
 			this.footer.addClass('mux-hidden');
 			
 		// Set buttons
@@ -269,6 +264,11 @@ MUX.Dialog = new Class({
 			this.open();
 			
 		return this;
+	},
+	
+	toElement: function()
+	{
+		return this.box;
 	},
 	
 	open: function()
@@ -676,5 +676,10 @@ MUX.Button = new Class({
 				this.options.click = this.options.click.bind(this.options.context);
 			this.elem.addEvent('click', this.options.click);
 		}
+	},
+	
+	toElement: function()
+	{
+		return this.elem;
 	}
 });
