@@ -1,3 +1,14 @@
+/*
+---
+description: Stylish and functional dialogs.
+license: MIT
+copyright: Copyright (c) 2011 by Max Lavrov (lavmax).
+author: Max Lavrov (lavmax)
+requires: core/1.3: '*'
+provides: [MUX.Dialog, MUX.Button]
+...
+*/
+
 MUX = window.MUX || {};
 
 MUX.Dialog = new Class({
