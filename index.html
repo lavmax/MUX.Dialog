@@ -83,7 +83,9 @@
 						new Element('br'),
 						new Element('p', {html: 'Try to drag and move the dialog.'}),
 						new Element('br'),
-						new Element('p', {html: 'You can also close it by pressing Esc.'})
+						new Element('p', {html: 'You can also close it by pressing Esc.'}),
+						new Element('input', {type: 'text'}),
+						new Element('textarea')
 					]),
 					buttons: [{
 						title: 'Cancel',
@@ -242,7 +244,12 @@
 					}],
 					onSubmit: function()
 					{
-						this.close(2000);
+						new Request({
+							method: 'get',
+							url: 'external-content.html',
+							onComplete: this.loader.stop.bind(this.loader)
+						}).send();
+						//this.close(2000);
 					}
 				});
 			});
