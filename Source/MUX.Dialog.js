@@ -342,9 +342,9 @@ MUX.Dialog = new Class({
 		this.box.removeClass('mux-invisible').fireEvent('mousedown');
 		
 		// Focus first editable element or window box itself
-		var editable = this.content.getElement('textarea:not([disabled]), input:not([disabled]), select:not([disabled])');
-		if (editable)
-			editable.focus();
+		var editable = this.content.getElements('textarea:not([disabled]), input:not([disabled]), select:not([disabled])');
+		if (editable.length)
+			editable[0].focus();
 		else
 			this.box.focus();
 
@@ -400,13 +400,13 @@ MUX.Dialog = new Class({
 		else if (this.options.position.top === 'center')
 			top = centerTop;
 		else
-			top = options.position.top;
+			top = this.options.position.top;
 			
 		// Calculate left window position
 		if (this.options.position.left === 'center')
 			left = browserWindowSize.x / 2 - windowSize.x / 2;
 		else
-			left = options.position.top;
+			left = this.options.position.left;
 		
 		// Eliminate negative values
 		top = Math.max(0, Math.round(top));
