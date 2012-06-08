@@ -341,11 +341,17 @@ MUX.Dialog = new Class({
 		
 		this.box.removeClass('mux-invisible').fireEvent('mousedown');
 		
-		// Focus first editable element or window box itself
+		// Focus first editable, visible element or window box itself
+		var found = false;
 		var editable = this.content.getElements('textarea:not([disabled]), input:not([disabled]), select:not([disabled])');
-		if (editable.length)
-			editable[0].focus();
-		else
+		for (var i = 0; i < editable.length && !found; i++) {
+			if (editable[i].isVisible()) {
+				editable[i].focus();
+				found = true;
+			}
+		}
+
+		if (!found)
 			this.box.focus();
 
 		return this;
